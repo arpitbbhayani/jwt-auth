@@ -165,10 +165,12 @@ func (c *credentials) updateAuthTokenFromRefreshToken() *jwtError {
 
 func (c *credentials) validateAndUpdateCredentials() *jwtError {
 	// first, check that the csrf token matches what's in the jwts
-	err := c.validateCsrfStringAgainstCredentials()
-	if err != nil {
-		return newJwtError(err, 500)
-	}
+
+	// NOTE: Removed this check as I do not want protection against CSRF
+	// err := c.validateCsrfStringAgainstCredentials()
+	// if err != nil {
+	// 	return newJwtError(err, 500)
+	// }
 
 	// next, check the auth token in a stateless manner
 	if c.AuthToken.Token.Valid {
@@ -204,7 +206,7 @@ func (c *credentials) validateAndUpdateCredentials() *jwtError {
 			c.myLog("Auth token is expired")
 			if !c.options.VerifyOnlyServer {
 				// attempt to update the tokens
-				err = c.updateAuthTokenFromRefreshToken()
+				err := c.updateAuthTokenFromRefreshToken()
 				return err
 			}
 
